@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const auth = require('./middleware/auth');
 const verifySource = require('./middleware/verify_source');
+const verifyFlw = require('./middleware/verify_flw');
 const {crossPayLogger, crossPayResponse} = require('./utils/utils');
 
 app.use(cors({ origin: true }))
