@@ -2,4 +2,4 @@ class CrossPayTransactionService {
 
 }
 
-module.exports = CrossPayTransactionService
+module.exports = CrossPayTransactionService;
