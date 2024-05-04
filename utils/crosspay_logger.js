@@ -17,4 +17,4 @@ const crossPayLogger = winston.createLogger({
   ]
 })
 
-module.exports = crossPayLogger;
+module.exports = crossPayLogger
