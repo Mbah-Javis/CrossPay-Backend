@@ -2,9 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const auth = require('./middleware/auth');
 const verifySource = require('./middleware/verify_source');
-const crossPayLogger = require('./utils/crosspay_logger');
-const crossPayResponse = require('./utils/crosspay_response');
+const {crossPayLogger, crossPayResponse} = require('./utils/utils');
 
 app.use(cors({ origin: true }))
 app.use(express.json())

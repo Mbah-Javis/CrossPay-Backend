@@ -1,5 +1,4 @@
-const crossPayLogger = require('../utils/crosspay_logger');
-const crossPayResponse = require('../utils/crosspay_response');
+const {crossPayLogger, crossPayResponse} = require('../utils/utils');
 
 module.exports = (req, res, next) => {
   const secretHash = process.env.CROSSPAY_SECRET_HASH
