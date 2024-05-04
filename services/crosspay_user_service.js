@@ -1,6 +1,5 @@
-
 class CrossPayUserService {
 
 }
 
-module.exports = CrossPayUserService;
+module.exports = CrossPayUserService

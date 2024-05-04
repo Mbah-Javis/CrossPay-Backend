@@ -1,6 +1,5 @@
-
 class TransactionSchema {
 
 }
 
-module.exports = TransactionSchema;
+module.exports = TransactionSchema

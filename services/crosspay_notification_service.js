@@ -1,6 +1,5 @@
-
 class CrossPayNotificationService {
 
 }
 
-module.exports = CrossPayNotificationService;
+module.exports = CrossPayNotificationService
