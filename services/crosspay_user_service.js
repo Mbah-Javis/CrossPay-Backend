@@ -4,8 +4,8 @@ class CrossPayUserService {
   static users = 'users'
 
   static async getUser (uid) {
-    const query = await db.collection(this.users).where('uid', '==', uid).get()
-    return query.docs.length > 0 ? query.docs[0].data() : null
+    const ref = await db.collection(this.users).doc(uid).get()
+    return ref.exists ? ref.data() : null
   }
 }
 
