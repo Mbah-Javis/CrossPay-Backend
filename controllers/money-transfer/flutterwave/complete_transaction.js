@@ -7,11 +7,11 @@ const TransactionStatus = require('../../../models/transaction_status')
 const completeTransaction = async (req, res) => {
 
   try {
-    const transactionId = `${req.body.data.id}`;
-    const expectedAmount = req.body.data.amount;
+    const transactionId = `${req.body.data.id}`
+    const expectedAmount = req.body.data.amount
     const response = await flwApi.Transaction.verify({ id: transactionId });
     if (response.data.status === "successful") {
-        res.status(200).json(response);
+        res.status(200).json(response)
         const {uuid, user_id, sender_name, sender_number, receiver_number,
             receiver_name, mobile_operator, currency, contry_code } = response.data.meta
         
@@ -47,20 +47,20 @@ const completeTransaction = async (req, res) => {
 
             // Send transaction in progress notification
         }
-        res.end();
+        res.end()
     } else {
         res.status(200).json(response)
-        const {uuid, user_id, sender_name, sender_number, receiver_number, receiver_name, mobile_operator } = response.data.meta;
+        const {uuid, user_id, sender_name, sender_number, receiver_number, receiver_name, mobile_operator } = response.data.meta
         const status = TransactionStatus.FAILED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)
         await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
         await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
         // Send failed notification to sender
-        res.end();
+        res.end()
     }
 
-    res.status(200).end();
+    res.status(200).end()
 
   } catch (error) {
     crossPayLogger.error('Flutterwave complete transaction error', [error])
