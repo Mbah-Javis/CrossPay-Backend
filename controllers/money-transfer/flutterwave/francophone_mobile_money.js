@@ -6,7 +6,7 @@ const { crossPayLogger, crossPayResponse } = require('../../../utils/utils')
 const { dateHelper } = require('../../../utils/utils');
 const TransactionStatus = require('../../../models/transaction_status');
 
-const francoPhoneMobilemoney = async (req, res) => {
+const initiateFrancoPhoneMobilemoney = async (req, res) => {
     const validator = new TransactionModel()
     const { error } = validator.validateData(req.body)
     if (error) {
@@ -75,4 +75,4 @@ const francoPhoneMobilemoney = async (req, res) => {
     }
 }
 
-module.exports = francoPhoneMobilemoney
+module.exports = initiateFrancoPhoneMobilemoney
