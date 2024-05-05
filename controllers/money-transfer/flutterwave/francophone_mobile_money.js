@@ -61,6 +61,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         }
 
         await CrossPayTransactionService.saveTransaction(txUuid, transaction)
+        // Send transaction initiate notification
         return crossPayResponse.sendSuccessResponse(res, response, 200)
       } else {
         const message = {
