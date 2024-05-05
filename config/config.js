@@ -2,6 +2,8 @@ const fbAdmin = require('firebase-admin')
 const OneSignal = require('onesignal-node')
 const Flutterwave = require('flutterwave-node-v3')
 const serviceAccount = require('./serviceAccountKey.json')
+const i18next = require('i18next')
+const Backend = require('i18next-node-fs-backend')
 const onesignalAppId = process.env.ONESIGNAL_APP_ID
 const onesignalApiKey = process.env.ONESIGNAL_API_KEY
 const flwPublicKey = process.env.FLW_PUBLIC_KEY
@@ -21,7 +23,25 @@ const gCloudConfig = {
   }
 }
 
+i18next.use(Backend).init({
+  fallbackLng: 'en',
+  backend: {
+    loadPath: '../locales/{{lng}}/{{ns}}.json'
+  },
+  interpolation: {
+    escapeValue: false
+  },
+  resources: {
+    en: {
+      translation: require('../locales/en.json')
+    },
+    fr: {
+      translation: require('../locales/fr.json')
+    }
+  }
+})
+
 const db = fbAdmin.firestore()
 const auth = fbAdmin.auth()
 
-module.exports = { db, auth, gCloudConfig, oneSignalClient, flwApi }
+module.exports = { db, auth, gCloudConfig, oneSignalClient, i18next, flwApi }
