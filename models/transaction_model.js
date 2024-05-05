@@ -1,3 +1,5 @@
+const Joi = require('joi')
+
 class TransactionModel {
   constructor () {
     this.transactionSchema = Joi.object({
