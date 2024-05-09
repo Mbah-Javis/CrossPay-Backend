@@ -11,14 +11,15 @@ const addNewUser = async (req, res) => {
     }
 
   try {
-    const { uid, first_name, last_name, phone_number, profile_image, notification_settings, country, phone_code } = req.body
+    const { uid, first_name, last_name, phone_number,
+      profile_image, notification_settings, country, contry_code } = req.body
 
     const user = {
       uid: uid,
       first_name: first_name,
       last_name: last_name,
       phone_number: phone_number,
-      phone_code: phone_code,
+      contry_code: contry_code,
       country: country,
       date_created: dateHelper.getCurrentDate(),
       profile_image: profile_image,

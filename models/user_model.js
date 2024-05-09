@@ -9,7 +9,7 @@ class UserModel {
       phone_number: Joi.number().required(),
       profile_image: Joi.string().allow(null),
       country: Joi.string().valid('CM'),
-      phone_code: Joi.number().valid('237'),
+      contry_code: Joi.number().valid('237').required(),
       notification_settings: Joi.object({
         language: Joi.string().allow(null),
         device_info: Joi.object().allow(null),
