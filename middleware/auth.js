@@ -1,5 +1,5 @@
 const { auth } = require('../config/config')
-const CrossPayUserService = require('../services/crosspay_user_service')
+const CrossPayUserService = require('../services/user/crosspay_user_service')
 const { crossPayLogger, crossPayResponse } = require('../utils/utils')
 
 module.exports = async (req, res, next) => {

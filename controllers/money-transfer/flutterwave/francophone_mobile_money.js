@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
-const { flwApi } = require('../../../config/config')
 const TransactionModel = require('../../../models/transaction_model')
-const CrossPayTransactionService = require('../../../services/crosspay_transaction_service');
+const CrossPayTransactionService = require('../../../services/transaction/crosspay_transaction_service')
+const FlutterwaveService = require('../../../services/payments/flutterwave/flutterwave_service')
 const { crossPayLogger, crossPayResponse } = require('../../../utils/utils')
 const { dateHelper } = require('../../../utils/utils');
 const TransactionStatus = require('../../../models/transaction_status');
@@ -44,7 +44,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         },
       };
   
-      const response = await flwApi.MobileMoney.franco_phone(payload)
+      const response = await FlutterwaveService.fMMobileMoney(payload)
       crossPayLogger.info('Flutterwave charge response', [response])
       if (response.status == "success") {
         const transaction = {

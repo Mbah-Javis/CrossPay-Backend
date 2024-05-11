@@ -1,4 +1,4 @@
-const { db } = require('../config/config')
+const { db } = require('../../config/config')
 
 class CrossPayTransactionService {
   static allTransactions = 'all_users_transactions'

@@ -1,4 +1,4 @@
-const CrossPayUserService = require('../../../services/crosspay_user_service')
+const CrossPayUserService = require('../../../services/user/crosspay_user_service')
 const UserModel = require('../../../models/user_model')
 const { crossPayLogger, crossPayResponse } = require('../../../utils/utils')
 const { dateHelper } = require('../../../utils/utils')
