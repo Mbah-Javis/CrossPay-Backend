@@ -15,31 +15,32 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
     try {
       const txUuid = uuidv4();
       const reference = `CP_${txUuid.split('-').at(0)}`.toUpperCase()
-      const {amount, sender_number, receiver_number, receiver_name, mobile_operator, currency, contry_code} = req.body
+      const {amount, sender_number, receiver_number, receiver_name, mobile_operator, currency, contry_code, country} = req.body
       const {first_name, last_name, uid } = req.user
       const email = 'javismbah2025@gmail.com'
       const dateCreated = dateHelper.getCurrentDate()
 
       const payload = {
-        "tx_ref": reference,
-        "amount": amount,
-        "currency": currency,
-        "country": "CM",
-        "email": email,
-        "phone_number": sender_number,
-        "fullname": `${first_name} ${last_name}`,
-        "meta": {
-          "amount": amount,
-          "uuid": txUuid,
+        'tx_ref': reference,
+        'amount': amount,
+        'currency': currency,
+        'country': country,
+        'email': email,
+        'phone_number': sender_number,
+        'fullname': `${first_name} ${last_name}`,
+        'meta': {
+          'amount': amount,
+          'uuid': txUuid,
           'user_id': uid,
-          "sender_name": `${first_name} ${last_name}`,
-          "sender_number": sender_number,
-          "receiver_number": receiver_number,
-          "receiver_name": receiver_name,
-          "date_created": dateCreated,
+          'sender_name': `${first_name} ${last_name}`,
+          'sender_number': sender_number,
+          'receiver_number': receiver_number,
+          'receiver_name': receiver_name,
+          'date_created': dateCreated,
           'mobile_operator': mobile_operator,
-          "currency": currency,
-          'contry_code': contry_code
+          'currency': currency,
+          'contry_code': contry_code,
+          'country': country
         },
       };
   
@@ -59,6 +60,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
           delivered_status: TransactionStatus.PENDING,
           currency: currency,
           contry_code: contry_code,
+          country: country,
           email: email,
           tx_id: response.data.id,
           tx_ref: reference

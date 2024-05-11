@@ -9,7 +9,8 @@ class TransactionModel {
       receiver_name: Joi.string().required(),
       mobile_operator: Joi.string().valid('MTN', 'ORANGE').required(),
       currency: Joi.string().valid('XAF').required(),
-      contry_code: Joi.string().valid('237').required()
+      contry_code: Joi.string().valid('237').required(),
+      country: Joi.string().valid('CM').required()
     })
   }
 
