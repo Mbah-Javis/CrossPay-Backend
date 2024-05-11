@@ -34,7 +34,7 @@ const addNewUser = async (req, res) => {
     // Send welcome notification
     const message = {
       message: 'User created successfully',
-      user: userData !== null ? userData.data() : null
+      user: userData
     }
     return crossPayResponse.sendSuccessResponse(res, message)
   } catch (error) {
