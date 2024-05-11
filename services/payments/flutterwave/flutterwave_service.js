@@ -3,7 +3,8 @@ const { flwApi } = require('../../../config/config')
 class FlutterwaveService {
 
   static charge = {
-    XAF: this.fMMobileMoney
+    XAF: this.fMMobileMoney,
+    XOF: this.fMMobileMoney
   }
 
   static async fMMobileMoney(payload) {
