@@ -44,7 +44,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         },
       };
   
-      const response = await FlutterwaveService.fMMobileMoney(payload)
+      const response = await FlutterwaveService.charge[currency](payload)
       crossPayLogger.info('Flutterwave charge response', [response])
       if (response.status == "success") {
         const transaction = {

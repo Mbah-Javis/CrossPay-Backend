@@ -2,6 +2,10 @@ const { flwApi } = require('../../../config/config')
 
 class FlutterwaveService {
 
+  static charge = {
+    XAF: this.fMMobileMoney
+  }
+
   static async fMMobileMoney(payload) {
     const response = await flwApi.MobileMoney.franco_phone(payload)
     return response
