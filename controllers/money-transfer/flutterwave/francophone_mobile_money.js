@@ -15,9 +15,12 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
     try {
       const txUuid = uuidv4();
       const reference = `CP_${txUuid.split('-').at(0)}`.toUpperCase()
-      const {amount, sender_number, receiver_number, receiver_name, mobile_operator, currency, contry_code, country} = req.body
-      const {first_name, last_name, uid } = req.user
-      const email = 'javismbah2025@gmail.com'
+      const {amount, currency, contry_code, 
+        country, network, operator,
+        sender_number, receive_amount, 
+        receiver_currency, receiver_country_code,
+        receiver_country, receiver_number, receiver_name, } = req.body
+      const {first_name, last_name, uid, email } = req.user
       const dateCreated = dateHelper.getCurrentDate()
 
       const payload = {
@@ -32,38 +35,37 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
           'amount': amount,
           'uuid': txUuid,
           'user_id': uid,
-          'sender_name': `${first_name} ${last_name}`,
-          'sender_number': sender_number,
+          'sender': `${first_name} ${last_name}`,
+          'mobile_number': sender_number,
+          'sender_country': country,
+          'currency': currency,
+          'contry_code': contry_code,
+          'network': network,
+          'operator': operator,
+          'receive_amount': receive_amount,
+          'receiver_currency': receiver_currency,
+          'receiver_country': receiver_country,
+          'receiver_country_code': receiver_country_code,
           'receiver_number': receiver_number,
           'receiver_name': receiver_name,
           'date_created': dateCreated,
-          'mobile_operator': mobile_operator,
-          'currency': currency,
-          'contry_code': contry_code,
-          'country': country
+          'tx_ref': reference
         },
       };
   
       const response = await FlutterwaveService.charge[currency](payload)
       crossPayLogger.info('Flutterwave charge response', [response])
-      if (response.status == "success") {
+      if (response.status === 'success') {
         const transaction = {
           status: TransactionStatus.PENDING,
           amount: amount,
           uuid: txUuid,
           user_id: uid,
-          sender_name: `${first_name} ${last_name}`,
-          sender_number: sender_number,
-          receiver_number: receiver_number,
-          receiver_name: receiver_name,
-          date_created: dateCreated,
           delivered_status: TransactionStatus.PENDING,
-          currency: currency,
-          contry_code: contry_code,
-          country: country,
           email: email,
           tx_id: response.data.id,
-          tx_ref: reference
+          tx_ref: reference,
+          meta: payload.meta
         }
 
         await CrossPayTransactionService.saveTransaction(txUuid, transaction)

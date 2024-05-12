@@ -12,13 +12,19 @@ const completeTransaction = async (req, res) => {
     const response = await FlutterwaveService.verify(transactionId)
     // Send OK response to flutterwave
     res.status(200).json(response)
+    // Check if mobile money charge was successful
     if (response.data.status === "successful") {
-        const {uuid, user_id, sender_name, sender_number, receiver_number,
-            receiver_name, mobile_operator, currency, contry_code } = response.data.meta
+        const {uuid, user_id, sender, mobile_number, 
+            receiver_number, receive_amount, tx_ref,
+            receiver_name, network, currency, contry_code, operator, 
+            receiver_currency } = response.data.meta
         
         // Check if webhook call is for a transaction being delivered
         const transaction = await CrossPayTransactionService.getTransaction(uuid)
-        if(transaction.data().status === TransactionStatus.COMPLETED) {
+        const txStatus = transaction.data().status
+        const deliveryStatus = transaction.data().delivered_status
+        if(txStatus === TransactionStatus.COMPLETED 
+            && deliveryStatus === TransactionStatus.INPROGRESS) {
             // Update transaction delivery status
             const status = TransactionStatus.COMPLETED
             await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
@@ -26,31 +32,40 @@ const completeTransaction = async (req, res) => {
 
             // Send transaction delivered notification
         }
+        // Update mobile momey charge transaction status
         const status = TransactionStatus.COMPLETED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)
 
         // Send Money to receiver phone number
-        const details = {
-            account_bank: "FMM",
-            account_number: `${contry_code}${receiver_number}`,
-            amount: expectedAmount,
-            currency: currency,
-            beneficiary_name: receiver_name,
-            meta: response.data.meta
-        };
-        const transfer = await FlutterwaveService.initiateTransfer(details)
-        crossPayLogger.info('Flutterwave transfer', [transfer])
-        if(transfer.data.status === 'NEW') {
-            const status = TransactionStatus.INPROGRESS
-            await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
-            await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
-
-            // Send transaction in progress notification
+        // Check if transaction has already been initiated/completed to prevent 
+        // sending money to the same mobile money account again
+        if (deliveryStatus !== TransactionStatus.INPROGRESS
+          || deliveryStatus !== TransactionStatus.COMPLETED) {
+            const details = {
+              account_bank: operator,
+              account_number: `${contry_code}${receiver_number}`,
+              amount: receive_amount,
+              currency: receiver_currency,
+              beneficiary_name: receiver_name,
+              debit_currency: 'USD',
+              debit_subaccount: '',
+              reference: tx_ref,
+              meta: response.data.meta
+          };
+          const transfer = await FlutterwaveService.initiateTransfer(details)
+          crossPayLogger.info('Flutterwave transfer', [transfer])
+          if(transfer.data.status === 'NEW') {
+              const status = TransactionStatus.INPROGRESS
+              await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
+              await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
+  
+              // Send transaction in progress notification
+          }
         }
         res.end()
     } else {
-        const {uuid, user_id, sender_name, sender_number, receiver_number, receiver_name, mobile_operator } = response.data.meta
+        const {uuid, user_id, sender, mobile_number, receiver_number, receiver_name, network } = response.data.meta
         const status = TransactionStatus.FAILED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)

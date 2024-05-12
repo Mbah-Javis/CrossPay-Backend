@@ -1,3 +1,4 @@
+const axios = require('axios')
 const fbAdmin = require('firebase-admin')
 const OneSignal = require('onesignal-node')
 const Flutterwave = require('flutterwave-node-v3')
@@ -23,6 +24,14 @@ const gCloudConfig = {
   }
 }
 
+const flwClient= axios.create({
+  baseURL: process.env.FLW_API_URL,
+  headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${flwSecreteKey}`,
+  },
+})
+
 i18next.use(Backend).init({
   fallbackLng: 'en',
   backend: {
@@ -44,4 +53,4 @@ i18next.use(Backend).init({
 const db = fbAdmin.firestore()
 const auth = fbAdmin.auth()
 
-module.exports = { db, auth, gCloudConfig, oneSignalClient, i18next, flwApi }
+module.exports = { db, auth, gCloudConfig, oneSignalClient, i18next, flwApi, flwClient }
