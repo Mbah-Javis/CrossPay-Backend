@@ -42,7 +42,7 @@ const completeTransaction = async (req, res) => {
         // sending money to the same mobile money account again
         if (deliveryStatus !== TransactionStatus.INPROGRESS
           || deliveryStatus !== TransactionStatus.COMPLETED) {
-            const details = {
+            /* const details = {
               account_bank: operator,
               account_number: `${contry_code}${receiver_number}`,
               amount: receive_amount,
@@ -61,7 +61,7 @@ const completeTransaction = async (req, res) => {
               await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
   
               // Send transaction in progress notification
-          }
+          } */
         }
         res.end()
     } else {
