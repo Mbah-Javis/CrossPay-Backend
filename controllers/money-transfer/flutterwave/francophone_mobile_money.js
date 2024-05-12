@@ -10,7 +10,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
     const validator = new TransactionModel()
     const { error } = validator.validateData(req.body)
     if (error) {
-        crossPayResponse.sendErrorResponse(res, error.message, 400)
+        return crossPayResponse.sendErrorResponse(res, error.message, 400).end()
     }
     try {
       const txUuid = uuidv4();

@@ -6,3 +6,4 @@ debug.log
 info.log
 warning.log
 config/serviceAccountKey.json
+.vscode/

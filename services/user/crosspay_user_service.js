@@ -12,6 +12,20 @@ class CrossPayUserService {
     return await db.collection(this.users).doc(uid).set(userData)
   }
 
+  static async updateWalletBalance (uid, currency, data) {
+    const path = `sub_account.wallet_balance.${currency}`
+    return await db.collection(this.users).doc(uid).update({
+      [path]: data
+    })
+  }
+
+  static async updateWalletDetails (uid, currency, data) {
+    const path = `sub_account.wallet_details.${currency}`
+    return await db.collection(this.users).doc(uid).update({
+      [path]: data
+    })
+  }
+
   static async getNotificationSettings (uid) {
     const ref = await db.collection(this.users).doc(uid).get()
     const userData = ref.data().notification_settings

@@ -12,13 +12,19 @@ class FlutterwaveService {
     ZMW: this.zmMobileMoney
   }
 
-  static async createSubaccount(accountName, mobileNumber, email) {
+  static async createSubaccount(accountName, mobileNumber, email, country) {
     const payload = {
         account_name: accountName,
         mobilenumber: mobileNumber,
-        email: email
+        email: email,
+        country: country
     }
     const response = await flwClient.post('/payout-subaccounts', payload)
+    return response
+  }
+
+  static async getSubaccount(accountReference) {
+    const response = await flwClient.get(`payout-subaccounts/${accountReference}`)
     return response
   }
 
