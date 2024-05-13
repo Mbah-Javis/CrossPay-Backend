@@ -21,8 +21,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         sender_number, receive_amount, 
         receiver_currency, receiver_country_code,
         receiver_country, receiver_number, receiver_name, } = req.body
-      const {first_name, last_name, uid, email } = {first_name: 'Mbah', 
-        last_name: 'Javis', uid: 'XpLKD4DFD4bUF4TRo2ZAEZ8q0y32', email: 'javismbah2025@gmail.com'} // req.user
+      const {first_name, last_name, uid, email } = req.user
       const dateCreated = dateHelper.getCurrentDate()
       const fullname = `${first_name} ${last_name}`
       const payload = {
