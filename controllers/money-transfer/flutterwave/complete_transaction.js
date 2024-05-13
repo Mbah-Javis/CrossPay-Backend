@@ -32,13 +32,15 @@ const completeTransaction = async (req, res) => {
             await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
 
             // Send transaction delivered notification
+
+            res.end()
         }
         // Update mobile momey charge transaction status
         const status = TransactionStatus.COMPLETED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)
 
-        // Fund virtual subaccount wallet account
+        // Fund virtual subaccount wallet
 
         // Send Money to receiver phone number
         // Check if transaction has already been initiated/completed to prevent 
@@ -70,27 +72,7 @@ const completeTransaction = async (req, res) => {
           }
 
           // Send money from wallet balance
-          /* const user = await CrossPayUserService.getUser(user_id)
-          const details = {
-              account_bank: operator,
-              account_number: `${contry_code}${receiver_number}`,
-              amount: receive_amount,
-              currency: receiver_currency,
-              beneficiary_name: receiver_name,
-              debit_currency: currency,
-              debit_subaccount: user.sub_account.account_reference,
-              reference: tx_ref,
-              meta: response.data.meta
-          };
-          const transfer = await FlutterwaveService.initiateTransfer(details)
-          crossPayLogger.info('Flutterwave transfer', [transfer])
-          if(transfer.data.status === 'NEW') {
-              const status = TransactionStatus.INPROGRESS
-              await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
-              await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
-  
-              // Send transaction in progress notification
-          } */
+
         }
         res.end()
     } else {
@@ -100,7 +82,9 @@ const completeTransaction = async (req, res) => {
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)
         await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
         await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
+
         // Send failed notification to sender
+
         res.end()
     }
 
