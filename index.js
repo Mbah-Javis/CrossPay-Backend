@@ -19,7 +19,7 @@ app.get('/api', verifySource, (req, res) => {
 })
 
 // User route
-app.use(`/api/${version}/user`, verifySource, userRouter)
+app.use(`/api/${version}/users`, verifySource, userRouter)
 // Money transfer route
 app.use(`/api/${version}/money-transfer`, verifySource, auth, moneyTransferRouter)
 // Complete transactions web-hooks

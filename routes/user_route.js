@@ -9,6 +9,7 @@ const getUserData = userController.getUserData
 router.post('/new', addNewUser)
 
 // Get user data
-router.get('/me', getUserData)
+router.get('/get/:id', getUserData)
+
 
 module.exports = router;

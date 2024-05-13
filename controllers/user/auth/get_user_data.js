@@ -3,11 +3,8 @@ const { crossPayLogger, crossPayResponse } = require('../../../utils/utils')
 
 const getUserData = async (req, res) => {
   try {
-    const { uid } = req.body
-    if(!uid) {
-      return crossPayResponse.sendErrorResponse(res, 'uid is required', 400)
-    }
-    const userData = await CrossPayUserService.getUser(uid)
+    const id = req.params.id
+    const userData = await CrossPayUserService.getUser(id)
     if (userData !== null) {
       const data = {
         message: 'User found',
