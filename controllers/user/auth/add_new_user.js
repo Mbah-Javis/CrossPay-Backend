@@ -15,8 +15,7 @@ const addNewUser = async (req, res) => {
     const { uid, first_name, last_name, phone_number, email,
       profile_image, notification_settings, country, contry_code } = req.body
     
-    const default_currency = countryCurrency[country]
-    const currency = default_currency.toLowerCase()
+    const currency = countryCurrency[country]
     let user = {
       uid: uid,
       first_name: first_name,

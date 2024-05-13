@@ -10,7 +10,7 @@ const getUserData = async (req, res) => {
         message: 'User found',
         user: userData
       }
-      return crossPayResponse.sendSuccessResponse(res, data, 200)
+      return crossPayResponse.sendSuccessResponse(res, data)
     } else {
       return crossPayResponse.sendErrorResponse(res, 'User not found', 404)
     }
