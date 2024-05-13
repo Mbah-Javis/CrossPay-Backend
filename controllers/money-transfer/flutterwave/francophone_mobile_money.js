@@ -12,6 +12,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
     if (error) {
         return crossPayResponse.sendErrorResponse(res, error.message, 400).end()
     }
+
     try {
       const txUuid = uuidv4();
       const reference = `CP_${txUuid.split('-').at(0)}`.toUpperCase()
@@ -20,22 +21,23 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         sender_number, receive_amount, 
         receiver_currency, receiver_country_code,
         receiver_country, receiver_number, receiver_name, } = req.body
-      const {first_name, last_name, uid, email } = req.user
+      const {first_name, last_name, uid, email } = {first_name: 'Mbah', 
+        last_name: 'Javis', uid: 'XpLKD4DFD4bUF4TRo2ZAEZ8q0y32', email: 'javismbah2025@gmail.com'} // req.user
       const dateCreated = dateHelper.getCurrentDate()
-
+      const fullname = `${first_name} ${last_name}`
       const payload = {
         'tx_ref': reference,
         'amount': amount,
         'currency': currency,
         'country': country,
         'email': email,
-        'phone_number': sender_number,
-        'fullname': `${first_name} ${last_name}`,
+        'phone_number': `${contry_code}${sender_number}`,
+        'fullname': fullname,
         'meta': {
           'amount': amount,
           'uuid': txUuid,
           'user_id': uid,
-          'sender': `${first_name} ${last_name}`,
+          'sender': fullname,
           'mobile_number': sender_number,
           'sender_country': country,
           'currency': currency,

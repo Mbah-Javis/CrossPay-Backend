@@ -39,7 +39,7 @@ class CrossPayTransactionService {
     return await db.collection(this.allTransactions).doc(uuid).update({ 'delivered_status': status })
   }
 
-  static async updateUserDeliveredStatus(uuid, status) {
+  static async updateUserDeliveredStatus(uuid, userId, status) {
     return await db
     .collection(this.userTransactions)
     .doc(userId)
