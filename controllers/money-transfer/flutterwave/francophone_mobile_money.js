@@ -16,7 +16,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
     try {
       const txUuid = uuidv4();
       const reference = `CP_${txUuid.split('-').at(0)}`.toUpperCase()
-      const {amount, currency, contry_code, 
+      const {amount, currency, country_code, 
         country, network, operator,
         sender_number, receive_amount, 
         receiver_currency, receiver_country_code,
@@ -30,7 +30,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
         'currency': currency,
         'country': country,
         'email': email,
-        'phone_number': `${contry_code}${sender_number}`,
+        'phone_number': `${country_code}${sender_number}`,
         'fullname': fullname,
         'meta': {
           'amount': amount,
@@ -40,7 +40,7 @@ const initiateFrancoPhoneMobilemoney = async (req, res) => {
           'mobile_number': sender_number,
           'sender_country': country,
           'currency': currency,
-          'contry_code': contry_code,
+          'country_code': country_code,
           'network': network,
           'operator': operator,
           'receive_amount': receive_amount,

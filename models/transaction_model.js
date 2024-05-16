@@ -6,7 +6,7 @@ class TransactionModel {
       amount: Joi.number().required(),
       receive_amount: Joi.number().required(),
       currency: Joi.string().valid('XAF').required(), /* 'XOF', 'GHS', 'KES', 'MWK', 'RWF', 'TZS', 'UGX', 'ZMW'*/
-      contry_code: Joi.string().valid(237).required(),
+      country_code: Joi.string().valid(237).required(),
       country: Joi.string().valid('CM').required(),
       network: Joi.string().valid('MTN', 'ORANGE'), /* 'AIRTEL', 'TIGO', 'VODAFONE' */
       operator: Joi.string().valid('FMM').required(), /* 'WAVE', 'MTN', 'AIRTEL', 'TIGO', 'VODAFONE', 'MPX', 'MPS', 'EMONEY', 'FREEMONEY', 'ORANGEMONEY', 'AIRTELMW', 'AMOLEMONEY' */
