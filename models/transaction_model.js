@@ -9,6 +9,7 @@ class TransactionModel {
       country_code: Joi.string().valid(237).required(),
       country: Joi.string().valid('CM').required(),
       network: Joi.string().valid('MTN', 'ORANGE'), /* 'AIRTEL', 'TIGO', 'VODAFONE' */
+      network_name: Joi.string().required(),
       operator: Joi.string().valid('FMM').required(), /* 'WAVE', 'MTN', 'AIRTEL', 'TIGO', 'VODAFONE', 'MPX', 'MPS', 'EMONEY', 'FREEMONEY', 'ORANGEMONEY', 'AIRTELMW', 'AMOLEMONEY' */
       sender_number: Joi.number().required(),
       receiver_currency: Joi.string().valid('XAF').required(),
