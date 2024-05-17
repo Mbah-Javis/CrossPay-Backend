@@ -13,28 +13,37 @@ const completeTransaction = async (req, res) => {
     const response = await FlutterwaveService.verify(transactionId)
 
     res.status(200).send(response.data)
-    // Check if mobile money charge was successful
-    if (response.data.status === "successful") {
+
+    // Check if mobile money charge OR transfer was successful
+    if (response.data.status === "successful" || response.data.status === "SUCCESSFUL") {
+
         const {uuid, user_id, sender, mobile_number, 
             receiver_number, receive_amount, tx_ref,
             receiver_name, network, currency, country_code, operator, 
             receiver_currency } = response.data.meta
-        
-        // Check if webhook call is for a transaction being delivered
+
+        // Get transaction details 
         const transaction = await CrossPayTransactionService.getTransaction(uuid)
-        const txStatus = transaction.data().status
-        const deliveryStatus = transaction.data().delivered_status
-        if(txStatus === TransactionStatus.COMPLETED 
-            && deliveryStatus === TransactionStatus.INPROGRESS) {
+        const { tx_id, tx_status, tx_delivered_status } = transaction.data()
+        
+        // Check if webhook call is for a transfer being delivered
+        if (response.data.id !== tx_id) {
+          if(tx_status === TransactionStatus.COMPLETED 
+            && tx_delivered_status === TransactionStatus.INPROGRESS) {
             // Update transaction delivery status
             const status = TransactionStatus.COMPLETED
             await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
             await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
 
+            // Update transfer status
+            await CrossPayTransactionService.updateTransferStatus(uuid, status)
+
             // Send transaction delivered notification
 
             res.end()
+          }
         }
+        
         // Update mobile momey charge transaction status
         const status = TransactionStatus.COMPLETED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
@@ -45,8 +54,8 @@ const completeTransaction = async (req, res) => {
         // Send Money to receiver phone number
         // Check if transaction has already been initiated/completed to prevent 
         // sending money to the same mobile money account again
-        if (deliveryStatus !== TransactionStatus.INPROGRESS
-          && deliveryStatus !== TransactionStatus.COMPLETED) {
+        if (tx_delivered_status !== TransactionStatus.INPROGRESS
+          && tx_delivered_status !== TransactionStatus.COMPLETED) {
             // Send money from main account balance
             const details = {
               account_bank: operator,
@@ -60,6 +69,10 @@ const completeTransaction = async (req, res) => {
           const transfer = await FlutterwaveService.initiateTransfer(details)
           crossPayLogger.info('Flutterwave transfer', [transfer])
           if(transfer.data.status === 'NEW') {
+              
+              // Save transfer details
+              await CrossPayTransactionService.saveTransfer(uuid, transfer.data);
+
               const status = TransactionStatus.INPROGRESS
               await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
               await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
@@ -77,11 +90,21 @@ const completeTransaction = async (req, res) => {
         res.end()
     } else {
         const {uuid, user_id, sender, mobile_number, receiver_number, receiver_name, network } = response.data.meta
+
+        // Get transaction details 
+        const transaction = await CrossPayTransactionService.getTransaction(uuid)
+        const { tx_id } = transaction.data()
+
         const status = TransactionStatus.FAILED
         await CrossPayTransactionService.updateTransactionStatus(uuid, status)
         await CrossPayTransactionService.updateUserTransactionStatus(uuid, user_id, status)
         await CrossPayTransactionService.updateDeliveredStatus(uuid, status)
         await CrossPayTransactionService.updateUserDeliveredStatus(uuid, user_id, status)
+
+        // Update transfer status
+        if (response.data.id !== tx_id) {
+          await CrossPayTransactionService.updateTransferStatus(uuid, status)
+        }
 
         // Send failed notification to sender
 
